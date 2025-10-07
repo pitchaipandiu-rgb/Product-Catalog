@@ -1,531 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Product Catalog - Easy Shop</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness & Diet Tracking Platform</title>
     <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: "Poppins", Arial, sans-serif;
-      }
-
-      body {
-        background: linear-gradient(135deg, #6e48aa, #9d50bb);
-        color: #fff;
-        min-height: 100vh;
-        line-height: 1.6;
-      }
-
-      .app {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-
-      header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 20px;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(8px);
-        border-radius: 12px;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-      }
-
-      header h1 {
-        font-size: 2.2em;
-        background: linear-gradient(to right, #feca57, #ff6b6b);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-
-      .admin-toggle {
-        background: #ff6b6b;
-        border: none;
-        padding: 10px 25px;
-        border-radius: 20px;
-        color: #fff;
-        font-size: 1em;
-        cursor: pointer;
-        transition: transform 0.3s ease, background 0.3s ease;
-      }
-
-      .admin-toggle:hover {
-        background: #e55a5a;
-        transform: scale(1.05);
-      }
-
-      .search-bar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 15px;
-        margin: 20px 0;
-        padding: 15px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-      }
-
-      .search-bar input,
-      .search-bar select {
-        padding: 12px;
-        width: 100%;
-        max-width: 300px;
-        border: none;
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 0.25);
-        color: #fff;
-        font-size: 1em;
-        transition: background 0.3s ease;
-      }
-
-      .search-bar input::placeholder {
-        color: rgba(255, 255, 255, 0.8);
-      }
-
-      .search-bar input:focus,
-      .search-bar select:focus {
-        outline: none;
-        background: rgba(255, 255, 255, 0.35);
-      }
-
-      .product-form {
-        margin: 20px 0;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(8px);
-        border-radius: 12px;
-        animation: slideIn 0.5s ease-out;
-      }
-
-      @keyframes slideIn {
-        from {
-          transform: translateY(-20px);
-          opacity: 0;
+        /* CSS Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
         }
-        to {
-          transform: translateY(0);
-          opacity: 1;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
         }
-      }
-
-      .product-form input,
-      .product-form textarea,
-      .product-form button {
-        display: block;
-        width: 100%;
-        margin: 12px 0;
-        padding: 12px;
-        border: none;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.25);
-        color: #fff;
-        font-size: 1em;
-      }
-
-      .product-form textarea {
-        height: 100px;
-        resize: vertical;
-      }
-
-      .product-form button {
-        background: #feca57;
-        cursor: pointer;
-        font-weight: bold;
-        transition: background 0.3s ease;
-      }
-
-      .product-form button:hover {
-        background: #e0b74a;
-      }
-
-      .product-list {
-        margin-top: 20px;
-        animation: fadeIn 0.8s ease-out;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
+        .hidden {
+            display: none;
         }
-        to {
-          opacity: 1;
+        .form-group {
+            margin-bottom: 15px;
         }
-      }
-
-      .product-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
-      }
-
-      .product-card {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(8px);
-        border-radius: 12px;
-        padding: 15px;
-        text-align: center;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-
-      .product-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      }
-
-      .product-card img {
-        max-width: 100%;
-        height: 160px;
-        object-fit: cover;
-        border-radius: 8px;
-      }
-
-      .product-card h3 {
-        margin: 10px 0;
-        font-size: 1.2em;
-        color: #feca57;
-      }
-
-      .product-card p {
-        margin: 5px 0;
-        font-size: 0.9em;
-        color: rgba(255, 255, 255, 0.9);
-      }
-
-      .product-card button {
-        background: #ff6b6b;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 20px;
-        color: #fff;
-        font-size: 0.9em;
-        cursor: pointer;
-        margin: 5px;
-        transition: background 0.3s ease;
-      }
-
-      .product-card button:hover {
-        background: #e55a5a;
-      }
-
-      .error {
-        color: #ff6b6b;
-        text-align: center;
-        margin: 15px 0;
-        font-size: 1.1em;
-        background: rgba(255, 0, 0, 0.2);
-        padding: 10px;
-        border-radius: 8px;
-      }
-
-      #loading {
-        text-align: center;
-        font-size: 1.2em;
-        color: rgba(255, 255, 255, 0.8);
-      }
-
-      .spinner {
-        border: 4px solid rgba(255, 255, 255, 0.3);
-        border-top: 4px solid #feca57;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin: 15px auto;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
-        100% {
-          transform: rotate(360deg);
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
         }
-      }
-
-      .tooltip {
-        position: relative;
-        display: inline-block;
-      }
-
-      .tooltip .tooltiptext {
-        visibility: hidden;
-        width: 120px;
-        background: #333;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 5px;
-        position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        transform: translateX(-50%);
-        opacity: 0;
-        transition: opacity 0.3s;
-      }
-
-      .tooltip:hover .tooltiptext {
-        visibility: visible;
-        opacity: 1;
-      }
-
-      @media (max-width: 600px) {
-        .search-bar {
-          flex-direction: column;
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border: none;
         }
-        .search-bar input,
-        .search-bar select {
-          max-width: 100%;
+        button:hover {
+            background-color: #45a049;
         }
-        header h1 {
-          font-size: 1.8em;
+        .dashboard {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
         }
-      }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 30%;
+            text-align: center;
+        }
+        .meal-log {
+            margin: 20px 0;
+        }
+        .meal-section {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .report {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .google-btn {
+            background-color: #4285f4;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .google-btn:hover {
+            background-color: #357ae8;
+        }
     </style>
-  </head>
-  <body>
-    <div class="app">
-      <header>
-        <h1>Easy Shop Catalog</h1>
-        <button
-          id="admin-toggle"
-          class="admin-toggle tooltip"
-          aria-label="Toggle admin mode"
-        >
-          Login as Admin
-          <span class="tooltiptext">Switch to admin mode</span>
-        </button>
-      </header>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Page -->
+        <div id="loginPage">
+            <h1>Welcome to Fitness & Diet Tracker</h1>
+            <p>Sign in with Google to get started.</p>
+            <button class="google-btn" onclick="googleLogin()">Sign in with Google</button>
+        </div>
 
-      <!-- Search and Filter -->
-      <div class="search-bar">
-        <input
-          type="text"
-          id="search-input"
-          placeholder="Search for products..."
-          aria-label="Search products"
-        />
-        <select id="category-filter" aria-label="Filter by category">
-          <option value="">All Categories</option>
-          <option value="electronics">Electronics</option>
-          <option value="men's clothing">Men's Clothing</option>
-          <option value="women's clothing">Women's Clothing</option>
-          <option value="jewelery">Jewelry</option>
-        </select>
-      </div>
+        <!-- Registration Page -->
+        <div id="registerPage" class="hidden">
+            <h2>Complete Your Profile</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="name">Full Name:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" min="1" max="120" required>
+                </div>
+                <div class="form-group">
+                    <label for="height">Height (cm):</label>
+                    <input type="number" id="height" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="weight">Weight (kg):</label>
+                    <input type="number" id="weight" min="1" required>
+                </div>
+                <button type="submit">Register & Continue</button>
+            </form>
+        </div>
 
-      <!-- Admin Form -->
-      <div id="product-form" class="product-form" style="display: none">
-        <h2>Add a New Product</h2>
-        <p id="form-error" class="error"></p>
-        <form id="add-product-form">
-          <input
-            type="text"
-            name="name"
-            placeholder="Product Name (e.g., iPhone)"
-            required
-            aria-label="Product name"
-          />
-          <textarea
-            name="description"
-            placeholder="Describe the product..."
-            required
-            aria-label="Product description"
-          ></textarea>
-          <input
-            type="number"
-            name="price"
-            placeholder="Price (e.g., 99.99)"
-            step="0.01"
-            required
-            aria-label="Product price"
-          />
-          <input
-            type="text"
-            name="category"
-            placeholder="Category (e.g., electronics)"
-            required
-            aria-label="Product category"
-          />
-          <input
-            type="text"
-            name="image"
-            placeholder="Image URL (e.g., https://example.com/image.jpg)"
-            required
-            aria-label="Product image URL"
-          />
-          <button type="submit" class="tooltip">
-            Add Product
-            <span class="tooltiptext">Save new product</span>
-          </button>
-        </form>
-      </div>
+        <!-- Main Dashboard -->
+        <div id="dashboard" class="hidden">
+            <h1>Dashboard - Welcome, <span id="userName"></span>!</h1>
+            <div class="dashboard">
+                <div class="card">
+                    <h3>Track Fitness</h3>
+                    <button onclick="showFitness()">Log Workout</button>
+                </div>
+                <div class="card">
+                    <h3>Track Diet</h3>
+                    <button onclick="showDiet()">Log Meals</button>
+                </div>
+                <div class="card">
+                    <h3>View Reports</h3>
+                    <button onclick="showReports()">Analytics</button>
+                </div>
+            </div>
+            <button onclick="logout()">Logout</button>
+        </div>
 
-      <!-- Product List -->
-      <div id="product-list" class="product-list">
-        <p id="loading">Loading your products...</p>
-        <div id="spinner" class="spinner"></div>
-        <p id="error" class="error"></p>
-      </div>
+        <!-- Fitness Tracking -->
+        <div id="fitnessPage" class="hidden">
+            <h2>Log Workout</h2>
+            <div class="form-group">
+                <label for="workoutType">Workout Type:</label>
+                <select id="workoutType">
+                    <option value="running">Running (cal/hour: 600)</option>
+                    <option value="weightlifting">Weightlifting (cal/hour: 400)</option>
+                    <option value="yoga">Yoga (cal/hour: 300)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration (minutes):</label>
+                <input type="number" id="duration" min="1">
+            </div>
+            <button onclick="logWorkout()">Log & Calculate Burn</button>
+            <p id="burnResult"></p>
+            <button onclick="backToDashboard()">Back to Dashboard</button>
+        </div>
+
+        <!-- Diet Tracking -->
+        <div id="dietPage" class="hidden">
+            <h2>Log Daily Meals</h2>
+            <div class="meal-log">
+                <div class="meal-section">
+                    <h3>Morning (Breakfast)</h3>
+                    <input type="text" id="morningFood" placeholder="e.g., Oatmeal - 300 cal">
+                    <input type="number" id="morningCal" placeholder="Calories" min="0">
+                </div>
+                <div class="meal-section">
+                    <h3>Afternoon (Lunch)</h3>
+                    <input type="text" id="afternoonFood" placeholder="e.g., Salad - 400 cal">
+                    <input type="number" id="afternoonCal" placeholder="Calories" min="0">
+                </div>
+                <div class="meal-section">
+                    <h3>Night (Dinner)</h3>
+                    <input type="text" id="nightFood" placeholder="e.g., Grilled Chicken - 500 cal">
+                    <input type="number" id="nightCal" placeholder="Calories" min="0">
+                </div>
+            </div>
+            <button onclick="logMeals()">Log Meals & Calculate Total Intake</button>
+            <p id="intakeResult"></p>
+            <button onclick="backToDashboard()">Back to Dashboard</button>
+        </div>
+
+        <!-- Reports -->
+        <div id="reportsPage" class="hidden">
+            <h2>Daily Analytics</h2>
+            <div class="report">
+                <p><strong>User Profile:</strong></p>
+                <p id="profileInfo"></p>
+                <p><strong>Daily Calorie Intake:</strong> <span id="totalIntake">0</span> cal</p>
+                <p><strong>Calories Burned (Workout + BMR):</strong> <span id="totalBurn">0</span> cal</p>
+                <p><strong>Net Calories:</strong> <span id="netCalories">0</span> cal</p>
+                <p id="bmrInfo">BMR not calculated yet.</p>
+            </div>
+            <button onclick="calculateBMR()">Calculate BMR</button>
+            <button onclick="backToDashboard()">Back to Dashboard</button>
+            <button onclick="updateGoals()">Update Goals</button>
+        </div>
+
+        <!-- Goals Update -->
+        <div id="goalsPage" class="hidden">
+            <h2>Update Goals</h2>
+            <p>Current Weight: <span id="currentWeight"></span> kg</p>
+            <div class="form-group">
+                <label for="goalWeight">Goal Weight (kg):</label>
+                <input type="number" id="goalWeight" min="1">
+            </div>
+            <button onclick="saveGoals()">Save Goals</button>
+            <button onclick="backToDashboard()">Back to Dashboard</button>
+        </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-      const API_URL = "https://fakestoreapi.com";
-      let isAdmin = false;
-
-      // DOM Elements
-      const adminToggle = document.getElementById("admin-toggle");
-      const productForm = document.getElementById("product-form");
-      const addProductForm = document.getElementById("add-product-form");
-      const searchInput = document.getElementById("search-input");
-      const categoryFilter = document.getElementById("category-filter");
-      const productList = document.getElementById("product-list");
-      const loading = document.getElementById("loading");
-      const spinner = document.getElementById("spinner");
-      const error = document.getElementById("error");
-      const formError = document.getElementById("form-error");
-
-      // Fetch and Display Products
-      async function fetchProducts(search = "", category = "") {
-        try {
-          loading.style.display = "block";
-          spinner.style.display = "block";
-          error.textContent = "";
-          let url = `${API_URL}/products?limit=10`;
-          if (category) url = `${API_URL}/products/category/${category}`;
-          const response = await axios.get(url);
-          let data = response.data;
-          if (search) {
-            data = data.filter((product) =>
-              product.title.toLowerCase().includes(search.toLowerCase())
-            );
-          }
-          loading.style.display = "none";
-          spinner.style.display = "none";
-          renderProducts(
-            data.map((p) => ({
-              _id: p.id,
-              name: p.title,
-              description: p.description.substring(0, 100) + "...",
-              price: p.price,
-              category: p.category,
-              image: p.image,
-            }))
-          );
-        } catch (err) {
-          loading.style.display = "none";
-          spinner.style.display = "none";
-          error.textContent =
-            "Oops! Unable to load products. Try refreshing the page.";
-        }
-      }
-
-      // Render Products
-      function renderProducts(products) {
-        productList.innerHTML = "";
-        if (products.length === 0) {
-          productList.innerHTML =
-            "<p>No products found. Try a different search or category!</p>";
-          return;
-        }
-        const grid = document.createElement("div");
-        grid.className = "product-grid";
-        products.forEach((product) => {
-          const card = document.createElement("div");
-          card.className = "product-card";
-          card.innerHTML = `
-          <img src="${product.image}" alt="${product.name}" loading="lazy">
-          <h3>${product.name}</h3>
-          <p>${product.description}</p>
-          <p><strong>Price:</strong> $${product.price.toFixed(2)}</p>
-          <p><strong>Category:</strong> ${product.category}</p>
-          ${
-            isAdmin
-              ? `
-            <button onclick="deleteProduct('${product._id}')" class="tooltip">
-              Delete
-              <span class="tooltiptext">Remove this product</span>
-            </button>
-          `
-              : ""
-          }
-        `;
-          grid.appendChild(card);
-        });
-        productList.appendChild(grid);
-      }
-
-      // Add Product (Mock for Demo)
-      addProductForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const formData = {
-          name: addProductForm.name.value,
-          description: addProductForm.description.value,
-          price: parseFloat(addProductForm.price.value),
-          category: addProductForm.category.value,
-          image: addProductForm.image.value,
+        // JavaScript Logic
+        let userData = {
+            name: '',
+            gender: '',
+            age: 0,
+            height: 0,
+            weight: 0,
+            goalWeight: 0,
+            dailyIntake: 0,
+            dailyBurn: 0,
+            bmr: 0
         };
-        try {
-          formError.textContent = "";
-          // Mock POST for demo (real backend would use axios.post)
-          alert(
-            "Product added successfully! (Demo mode - check console for details)"
-          );
-          console.log("New product:", formData);
-          addProductForm.reset();
-          fetchProducts(searchInput.value, categoryFilter.value);
-        } catch (err) {
-          formError.textContent =
-            "Oops! Couldn't add the product. Please try again.";
+        let isLoggedIn = false;
+        let workoutCalories = 0; // From fitness log
+
+        // Mock Google Login (In real app, use Google OAuth API)
+        function googleLogin() {
+            // Simulate successful login with mock user data
+            alert('Google login successful! (Mock - In production, integrate Google Sign-In API)');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('registerPage').classList.remove('hidden');
         }
-      });
 
-      // Delete Product (Mock for Demo)
-      async function deleteProduct(id) {
-        if (
-          confirm("Are you sure you want to delete this product? (Demo mode)")
-        ) {
-          alert("Product deleted! (Demo mode - changes won't persist)");
-          fetchProducts(searchInput.value, categoryFilter.value);
-        }
-      }
+        // Handle Registration
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            userData.name = document.getElementById('name').value;
+            userData.gender = document.getElementById('gender').value;
+            userData.age = parseInt(document.getElementById('age').value);
+            userData.height = parseInt(document.getElementById('height').value);
+            userData.weight = parseInt(document.getElementById('weight').value);
+            userData.goalWeight = userData.weight; // Default to current
 
-      // Toggle Admin Mode
-      adminToggle.addEventListener("click", () => {
-        isAdmin = !isAdmin;
-        adminToggle.textContent = isAdmin ? "Logout Admin" : "Login as Admin";
-        adminToggle.setAttribute(
-          "aria-label",
-          isAdmin ? "Logout from admin mode" : "Toggle admin mode"
-        );
-        productForm.style.display = isAdmin ? "block" : "none";
-        fetchProducts(searchInput.value, categoryFilter.value);
-      });
-
-      // Search and Filter
-      searchInput.addEventListener("input", () => {
-        fetchProducts(searchInput.value, categoryFilter.value);
-      });
-      categoryFilter.addEventListener("change", () => {
-        fetchProducts(searchInput.value, categoryFilter.value);
-      });
-
-      // Accessibility: Keyboard Navigation
-      document.querySelectorAll("button, input, select").forEach((element) => {
-        element.addEventListener("keypress", (e) => {
-          if (e.key === "Enter") element.click();
+            alert('Registration successful!');
+            showDashboard();
         });
-      });
 
-      // Initial Fetch
-      fetchProducts();
+        function showDashboard() {
+            document.getElementById('registerPage').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('userName').textContent = userData.name;
+        }
+
+        function showFitness() {
+            hideAllPages();
+            document.getElementById('fitnessPage').classList.remove('hidden');
+        }
+
+        function showDiet() {
+            hideAllPages();
+            document.getElementById('dietPage').classList.remove('hidden');
+        }
+
+        function showReports() {
+            hideAllPages();
+            document.getElementById('reportsPage').classList.remove('hidden');
+            updateReports();
+        }
+
+        function hideAllPages() {
+            const pages = ['dashboard', 'fitnessPage', 'dietPage', 'reportsPage', 'goalsPage'];
+            pages.forEach(page => {
+                document.getElementById(page).classList.add('hidden');
+            });
+        }
+
+        function backToDashboard() {
+            hideAllPages();
+            document.getElementById('dashboard').classList.remove('hidden');
+        }
+
+        // Log Workout & Calculate Burn
+        function logWorkout() {
+            const type = document.getElementById('workoutType').value;
+            const duration = parseInt(document.getElementById('duration').value) || 0;
+            let calPerHour;
+            if (type === 'running') calPerHour = 600;
+            else if (type === 'weightlifting') calPerHour = 400;
+            else calPerHour = 300;
+            workoutCalories = (calPerHour * duration) / 60;
+            userData.dailyBurn += workoutCalories;
+            document.getElementById('burnResult').textContent = `Burned: ${workoutCalories} calories!`;
+            updateReports();
+        }
+
+        // Log Meals & Calculate Intake
+        function logMeals() {
+            const morning = parseInt(document.getElementById('morningCal').value) || 0;
+            const afternoon = parseInt(document.getElementById('afternoonCal').value) || 0;
+            const night = parseInt(document.getElementById('nightCal').value) || 0;
+            userData.dailyIntake = morning + afternoon + night;
+            document.getElementById('intakeResult').textContent = `Total Intake: ${userData.dailyIntake} calories!`;
+            updateReports();
+            // Reset forms
+            document.getElementById('morningCal').value = '';
+            document.getElementById('afternoonCal').value = '';
+            document.getElementById('nightCal').value = '';
+        }
+
+        // Calculate BMR (Harris-Benedict Equation)
+        function calculateBMR() {
+            let bmr;
+            if (userData.gender === 'male') {
+                bmr = 88.362 + (13.397 * userData.weight) + (4.799 * userData.height) - (5.677 * userData.age);
+            } else if (userData.gender === 'female') {
+                bmr = 447.593 + (9.247 * userData.weight) + (3.098 * userData.height) - (4.330 * userData.age);
+            } else {
+                bmr = (88.362 + (13.397 * userData.weight) + (4.799 * userData.height) - (5.677 * userData.age) + 
+                       447.593 + (9.247 * userData.weight) + (3.098 * userData.height) - (4.330 * userData.age)) / 2;
+            }
+            userData.bmr = Math.round(bmr);
+            userData.dailyBurn += userData.bmr; // Add BMR to daily burn
+            document.getElementById('bmrInfo').textContent = `BMR: ${userData.bmr} calories/day.`;
+            updateReports();
+        }
+
+        function updateReports() {
+            document.getElementById('profileInfo').innerHTML = `
+                Age: ${userData.age}, Gender: ${userData.gender}, Height: ${userData.height}cm, Weight: ${userData.weight}kg<br>
+                Goal Weight: ${userData.goalWeight}kg
+            `;
+            document.getElementById('totalIntake').textContent = userData.dailyIntake;
+            document.getElementById('totalBurn').textContent = userData.dailyBurn;
+            const net = userData.dailyIntake - userData.dailyBurn;
+            document.getElementById('netCalories').textContent = net > 0 ? `+${net}` : net;
+        }
+
+        function updateGoals() {
+            hideAllPages();
+            document.getElementById('goalsPage').classList.remove('hidden');
+            document.getElementById('currentWeight').textContent = userData.weight;
+        }
+
+        function saveGoals() {
+            userData.goalWeight = parseInt(document.getElementById('goalWeight').value) || userData.weight;
+            alert('Goals updated!');
+            backToDashboard();
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            userData = { dailyIntake: 0, dailyBurn: 0, bmr: 0 }; // Reset daily data
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+        }
     </script>
-  </body>
+</body>
 </html>
