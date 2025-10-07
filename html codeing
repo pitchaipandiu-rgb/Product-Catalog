@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness & Diet Tracking Platform</title>
+    <style>
+        /* CSS Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .dashboard {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 30%;
+            text-align: center;
+        }
+        .meal-log {
+            margin: 20px 0;
+        }
+        .meal-section {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        .report {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .google-btn {
+            background-color: #4285f4;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .google-btn:hover {
+            background-color: #357ae8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Page -->
+        <div id="loginPage">
+            <h1>Welcome to Fitness & Diet Tracker</h1>
+            <p>Sign in with Google to get started.</p>
+            <button class="google-btn" onclick="googleLogin()">Sign in with Google</button>
+        </div>
+
+        <!-- Registration Page -->
+        <div id="registerPage" class="hidden">
+            <h2>Complete Your Profile</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="name">Full Name:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" id="age" min="1" max="120" required>
+                </div>
+                <div class="form-group">
+                    <label for="height">Height (cm):</label>
+                    <input type="number" id="height" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="weight">Weight (kg):</label>
+                    <input type="number" id="weight" min="1" required>
+                </div>
+                <button type="submit">Register & Continue</button>
+            </form>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div id="dashboard" class="hidden">
+            <h1>Dashboard - Welcome, <span id="userName"></span>!</h1>
+            <div class="dashboard">
+                <div class="card">
+                    <h3>Track Fitness</h3>
+                    <button onclick="showFitness()">Log Workout</button>
+                </div>
+                <div class="card">
+                    <h3>Track Diet</h3>
+                    <button onclick="showDiet()">Log Meals</button>
+                </div>
+                <div class="card">
+                    <h3>View Reports</h3>
+                    <button onclick="showReports()">Analytics</button>
+                </div>
+            </div>
+            <button onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Fitness Tracking -->
+        <div id="fitnessPage" class="hidden">
+            <h2>Log Workout</h2>
+            <div class="form-group">
+                <label for="workoutType">Workout Type:</label>
+                <select id="workoutType">
+                    <option value="running">Running (cal/hour: 600)</option>
+                    <option value="weightlifting">Weightlifting (cal/hour: 400)</option>
+                    <option value="yoga">Yoga (cal/hour: 300)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration (minutes):</label>
+                <input type="number" id="duration" min="1">
+            </div>
+            <button onclick="logWorkout()">Log & Calculate Burn</button>
+            <p id="burnResult"></p>
+            <button onclick="backToDashboard()">Back to Dashboard</button>
+        </div>
+
+        <!-- Diet Tracking -->
+        <div id="dietPage" class="hidden">
+            <h2>Log Daily Meals</h2>
+            <div class="meal-log">
+                <div class="meal-section">
+                    <h3>Morning (Breakfast)</h3>
+                    <input type="text" id="morningFood" placeholder="e.g., Oatmeal - 300 cal">
+                    <input type="number" id="morningCal" placeholder="Calories" min="0">
+                </div>
+                <div class="meal-section">
+                    <h3>Afternoon (Lunch)</h3>
+                    <input type="text" id="afternoonFood" placeholder="e.g., Salad - 400 cal">
+                    <input type="number" id="afternoonCal" placeholder="Calories" min="0">
+                </div>
+                <div class="meal-section">
+                    <h3>Night (Dinner)</h3>
+                    <input type="text" id="nightFood" placeholder="e.g., Grilled Chicken - 500 cal">
+                    <input type="number" id="nightCal" placeholder="Calories" min="0">
+                </div>
+            </div>
+            <button onclick="logMeals()">Log Meals & Calculate Total Intake</button>
+            <p id="intakeResult"></p>
+            <button onclick="backToDashboard()">Back to Dashboard</button>
+        </div>
+
+        <!-- Reports -->
+        <div id="reportsPage" class="hidden">
+            <h2>Daily Analytics</h2>
+            <div class="report">
+                <p><strong>User Profile:</strong></p>
+                <p id="profileInfo"></p>
+                <p><strong>Daily Calorie Intake:</strong> <span id="totalIntake">0</span> cal</p>
+                <p><strong>Calories Burned (Workout + BMR):</strong> <span id="totalBurn">0</span> cal</p>
+                <p><strong>Net Calories:</strong> <span id="netCalories">0</span> cal</p>
+                <p id="bmrInfo">BMR not calculated yet.</p>
+            </div>
+            <button onclick="calculateBMR()">Calculate BMR</button>
+            <button onclick="backToDashboard()">Back to Dashboard</button>
+            <button onclick="updateGoals()">Update Goals</button>
+        </div>
+
+        <!-- Goals Update -->
+        <div id="goalsPage" class="hidden">
+            <h2>Update Goals</h2>
+            <p>Current Weight: <span id="currentWeight"></span> kg</p>
+            <div class="form-group">
+                <label for="goalWeight">Goal Weight (kg):</label>
+                <input type="number" id="goalWeight" min="1">
+            </div>
+            <button onclick="saveGoals()">Save Goals</button>
+            <button onclick="backToDashboard()">Back to Dashboard</button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript Logic
+        let userData = {
+            name: '',
+            gender: '',
+            age: 0,
+            height: 0,
+            weight: 0,
+            goalWeight: 0,
+            dailyIntake: 0,
+            dailyBurn: 0,
+            bmr: 0
+        };
+        let isLoggedIn = false;
+        let workoutCalories = 0; // From fitness log
+
+        // Mock Google Login (In real app, use Google OAuth API)
+        function googleLogin() {
+            // Simulate successful login with mock user data
+            alert('Google login successful! (Mock - In production, integrate Google Sign-In API)');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('registerPage').classList.remove('hidden');
+        }
+
+        // Handle Registration
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            userData.name = document.getElementById('name').value;
+            userData.gender = document.getElementById('gender').value;
+            userData.age = parseInt(document.getElementById('age').value);
+            userData.height = parseInt(document.getElementById('height').value);
+            userData.weight = parseInt(document.getElementById('weight').value);
+            userData.goalWeight = userData.weight; // Default to current
+
+            alert('Registration successful!');
+            showDashboard();
+        });
+
+        function showDashboard() {
+            document.getElementById('registerPage').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('userName').textContent = userData.name;
+        }
+
+        function showFitness() {
+            hideAllPages();
+            document.getElementById('fitnessPage').classList.remove('hidden');
+        }
+
+        function showDiet() {
+            hideAllPages();
+            document.getElementById('dietPage').classList.remove('hidden');
+        }
+
+        function showReports() {
+            hideAllPages();
+            document.getElementById('reportsPage').classList.remove('hidden');
+            updateReports();
+        }
+
+        function hideAllPages() {
+            const pages = ['dashboard', 'fitnessPage', 'dietPage', 'reportsPage', 'goalsPage'];
+            pages.forEach(page => {
+                document.getElementById(page).classList.add('hidden');
+            });
+        }
+
+        function backToDashboard() {
+            hideAllPages();
+            document.getElementById('dashboard').classList.remove('hidden');
+        }
+
+        // Log Workout & Calculate Burn
+        function logWorkout() {
+            const type = document.getElementById('workoutType').value;
+            const duration = parseInt(document.getElementById('duration').value) || 0;
+            let calPerHour;
+            if (type === 'running') calPerHour = 600;
+            else if (type === 'weightlifting') calPerHour = 400;
+            else calPerHour = 300;
+            workoutCalories = (calPerHour * duration) / 60;
+            userData.dailyBurn += workoutCalories;
+            document.getElementById('burnResult').textContent = `Burned: ${workoutCalories} calories!`;
+            updateReports();
+        }
+
+        // Log Meals & Calculate Intake
+        function logMeals() {
+            const morning = parseInt(document.getElementById('morningCal').value) || 0;
+            const afternoon = parseInt(document.getElementById('afternoonCal').value) || 0;
+            const night = parseInt(document.getElementById('nightCal').value) || 0;
+            userData.dailyIntake = morning + afternoon + night;
+            document.getElementById('intakeResult').textContent = `Total Intake: ${userData.dailyIntake} calories!`;
+            updateReports();
+            // Reset forms
+            document.getElementById('morningCal').value = '';
+            document.getElementById('afternoonCal').value = '';
+            document.getElementById('nightCal').value = '';
+        }
+
+        // Calculate BMR (Harris-Benedict Equation)
+        function calculateBMR() {
+            let bmr;
+            if (userData.gender === 'male') {
+                bmr = 88.362 + (13.397 * userData.weight) + (4.799 * userData.height) - (5.677 * userData.age);
+            } else if (userData.gender === 'female') {
+                bmr = 447.593 + (9.247 * userData.weight) + (3.098 * userData.height) - (4.330 * userData.age);
+            } else {
+                bmr = (88.362 + (13.397 * userData.weight) + (4.799 * userData.height) - (5.677 * userData.age) + 
+                       447.593 + (9.247 * userData.weight) + (3.098 * userData.height) - (4.330 * userData.age)) / 2;
+            }
+            userData.bmr = Math.round(bmr);
+            userData.dailyBurn += userData.bmr; // Add BMR to daily burn
+            document.getElementById('bmrInfo').textContent = `BMR: ${userData.bmr} calories/day.`;
+            updateReports();
+        }
+
+        function updateReports() {
+            document.getElementById('profileInfo').innerHTML = `
+                Age: ${userData.age}, Gender: ${userData.gender}, Height: ${userData.height}cm, Weight: ${userData.weight}kg<br>
+                Goal Weight: ${userData.goalWeight}kg
+            `;
+            document.getElementById('totalIntake').textContent = userData.dailyIntake;
+            document.getElementById('totalBurn').textContent = userData.dailyBurn;
+            const net = userData.dailyIntake - userData.dailyBurn;
+            document.getElementById('netCalories').textContent = net > 0 ? `+${net}` : net;
+        }
+
+        function updateGoals() {
+            hideAllPages();
+            document.getElementById('goalsPage').classList.remove('hidden');
+            document.getElementById('currentWeight').textContent = userData.weight;
+        }
+
+        function saveGoals() {
+            userData.goalWeight = parseInt(document.getElementById('goalWeight').value) || userData.weight;
+            alert('Goals updated!');
+            backToDashboard();
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            userData = { dailyIntake: 0, dailyBurn: 0, bmr: 0 }; // Reset daily data
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
